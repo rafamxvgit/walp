@@ -17,10 +17,12 @@ type Collection struct {
 }
 
 type ProgramMemory struct {
-	Coleções []Collection
+	SelectedCol int
+	Coleções    []Collection
 }
 
-func ReadProgMem() ProgramMemory {
+// Lê a memoria e retorna a memória do programa
+func GetProgMem() ProgramMemory {
 	file := openMemFile()
 	defer file.Close()
 	fileData := utils.Expect(io.ReadAll(file))
@@ -30,6 +32,7 @@ func ReadProgMem() ProgramMemory {
 	return ProgramMemBuffer
 }
 
+// escreve a memória do programa
 func WriteProgramMem(progMem ProgramMemory) {
 	file := createMemFile()
 	defer file.Close()
@@ -37,6 +40,7 @@ func WriteProgramMem(progMem ProgramMemory) {
 	file.Write(data)
 }
 
+// cria ou recria um  novo arquivo mem.json
 func createMemFile() *os.File {
 	println("try create " + progMemName)
 	file, err := os.Create(programMemoryPath())
@@ -47,6 +51,7 @@ func createMemFile() *os.File {
 	panic(err)
 }
 
+// abre o arquivo de memória do programa
 func openMemFile() *os.File {
 	println("try open " + progMemName)
 	file, err := os.Open(programMemoryPath())
@@ -101,6 +106,17 @@ func InitMemFile() {
 	}
 	initialProgMemValue.Coleções = append(initialProgMemValue.Coleções, coll1, coll2)
 
+	initialProgMemValue.SelectedCol = 1
+
 	data := utils.Expect(json.Marshal(initialProgMemValue))
 	utils.Expect(file.Write(data))
+}
+
+// seleciona uma nova imagem para a coleção
+func (col *Collection) NextImage() {
+	dir := utils.Expect(os.ReadDir(col.Path))
+	col.CurrentFile++
+	if col.CurrentFile >= len(dir) {
+		col.CurrentFile = 0
+	}
 }
