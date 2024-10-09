@@ -1,10 +1,14 @@
 package main
 
 import (
+	"fmt"
 	iomem "walp/ioMem"
 )
 
 func main() {
+	iomem.InitMemFile()
 	programMem := iomem.ReadProgMem()
-	println(programMem.Coleções)
+	for _, col := range programMem.Coleções {
+		fmt.Printf("%+v\n", col)
+	}
 }

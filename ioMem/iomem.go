@@ -30,6 +30,23 @@ func ReadProgMem() ProgramMemory {
 	return ProgramMemBuffer
 }
 
+func WriteProgramMem(progMem ProgramMemory) {
+	file := createMemFile()
+	defer file.Close()
+	data := utils.Expect(json.Marshal(progMem))
+	file.Write(data)
+}
+
+func createMemFile() *os.File {
+	println("try create " + progMemName)
+	file, err := os.Create(programMemoryPath())
+	if err == nil {
+		println("created " + progMemName)
+		return file
+	}
+	panic(err)
+}
+
 func openMemFile() *os.File {
 	println("try open " + progMemName)
 	file, err := os.Open(programMemoryPath())
@@ -53,18 +70,37 @@ func openMemFile() *os.File {
 	panic("could not open " + progMemName)
 }
 
+// creates an empty memory file
 func initializeMemFile(file *os.File) {
 	newProgramMem := ProgramMemory{}
 	data := utils.Expect(json.Marshal(newProgramMem))
 	file.Write(data)
 }
 
-/*
-Retorna o caminho do diretório do executável do programa
-*/
+// Retorna o caminho do diretório do executável do programa
 func programMemoryPath() string {
 	exe := utils.Expect(os.Executable())
 	exeDir := path.Dir(exe)
 	progMemPath := exeDir + "/" + progMemName
 	return progMemPath
+}
+
+// this is just a debug function
+func InitMemFile() {
+	file := createMemFile()
+	defer file.Close()
+
+	initialProgMemValue := ProgramMemory{}
+	coll1 := Collection{
+		Nome: "light",
+		Path: "/home/rmxv/tudo/images/wallpapers/light",
+	}
+	coll2 := Collection{
+		Nome: "dark",
+		Path: "/home/rmxv/tudo/images/wallpapers/dark",
+	}
+	initialProgMemValue.Coleções = append(initialProgMemValue.Coleções, coll1, coll2)
+
+	data := utils.Expect(json.Marshal(initialProgMemValue))
+	utils.Expect(file.Write(data))
 }
