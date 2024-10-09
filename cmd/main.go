@@ -1,14 +1,14 @@
 package main
 
-import setwall "walp/setWall"
+import (
+	"os"
+	iomem "walp/ioMem"
+	setwall "walp/setWall"
+	"walp/utils"
+)
 
 func main() {
-	setwall.Setwall("/home/rmxv/tudo/images/wallpapers/dark/john-fowler-03Pv2Ikm5Hk-unsplash.jpg")
-	/*programMem := iomem.GetProgMem()
-	for _, col := range programMem.Coleções {
-		fmt.Printf("%+v\n", col)
-	}
-	println()
+	programMem := iomem.GetProgMem()
 
 	col1 := programMem.Coleções[1]
 	col1.NextImage()
@@ -17,8 +17,9 @@ func main() {
 	iomem.WriteProgramMem(programMem)
 	programMem = iomem.GetProgMem()
 
-	for _, col := range programMem.Coleções {
-		fmt.Printf("%+v\n", col)
-	}
-	*/
+	col := programMem.Coleções[programMem.SelectedCol]
+	dir := utils.Expect(os.ReadDir(col.Path))
+	fileName := dir[col.CurrentFile].Name()
+	filePath := col.Path + "/" + fileName
+	setwall.Setwall(filePath)
 }

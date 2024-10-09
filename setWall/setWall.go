@@ -13,7 +13,5 @@ func Setwall(filePath string) {
 	err := cmd.Run()
 	if err != nil {
 		panic(err)
-	} else {
-		print("deu bom")
 	}
 }
