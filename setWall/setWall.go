@@ -4,7 +4,6 @@ import (
 	"os/exec"
 )
 
-// gsettings set org.gnome.desktop.background picture-uri file:///home/serrano/Pictures/y.jpg
 func Setwall(filePath string) {
 	cmdPath := "file://" + filePath
 	println(cmdPath)

@@ -14,12 +14,10 @@ func main() {
 	col1.NextImage()
 	programMem.Coleções[1] = col1
 
-	iomem.WriteProgramMem(programMem)
-	programMem = iomem.GetProgMem()
-
 	col := programMem.Coleções[programMem.SelectedCol]
 	dir := utils.Expect(os.ReadDir(col.Path))
 	fileName := dir[col.CurrentFile].Name()
 	filePath := col.Path + "/" + fileName
 	setwall.Setwall(filePath)
+	iomem.WriteProgramMem(programMem)
 }
