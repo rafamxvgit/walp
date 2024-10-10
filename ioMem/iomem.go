@@ -42,10 +42,8 @@ func WriteProgramMem(progMem ProgramMemory) {
 
 // cria ou recria um  novo arquivo mem.json
 func createMemFile() *os.File {
-	println("try create " + progMemName)
 	file, err := os.Create(programMemoryPath())
 	if err == nil {
-		println("created " + progMemName)
 		return file
 	}
 	panic(err)
@@ -53,20 +51,14 @@ func createMemFile() *os.File {
 
 // abre o arquivo de memória do programa
 func openMemFile() *os.File {
-	println("try open " + progMemName)
 	file, err := os.Open(programMemoryPath())
 	if err == nil {
-		println("opened " + progMemName)
 		return file
 	}
-	println("open " + progMemName + " failed")
-	println("try create " + progMemName)
 
 	file, err = os.Create(programMemoryPath())
 
 	if err == nil {
-		println("created " + progMemName)
-		println("initializing " + progMemName)
 		initializeMemFile(file)
 		file.Close()
 		return openMemFile()
